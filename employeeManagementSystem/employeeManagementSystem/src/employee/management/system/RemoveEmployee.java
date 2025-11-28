@@ -15,19 +15,38 @@ public class RemoveEmployee extends JFrame implements ActionListener {
     JLabel eName, eFName, eEmail, ePhone;
 
     RemoveEmployee() {
-        // Frame setup
+        
         getContentPane().setBackground(DesignSystem.BACKGROUND_COLOR);
         setLayout(null);
 
-        // Header
-        JLabel heading = new JLabel("Remove Employee");
-        heading.setBounds(250, 20, 500, 50);
-        heading.setFont(DesignSystem.HEADER_FONT);
-        heading.setForeground(DesignSystem.PRIMARY_COLOR);
-        heading.setHorizontalAlignment(SwingConstants.CENTER);
-        add(heading);
+        
+        JPanel header = new JPanel();
+        header.setBackground(DesignSystem.PRIMARY_COLOR);
+        header.setBounds(0, 0, 1000, 60);
+        header.setLayout(null);
+        add(header);
 
-        // Selection Area
+        JLabel heading = new JLabel("Remove Employee");
+        heading.setBounds(250, 5, 500, 50);
+        heading.setFont(DesignSystem.HEADER_FONT);
+        heading.setForeground(DesignSystem.WHITE);
+        heading.setHorizontalAlignment(SwingConstants.CENTER);
+        header.add(heading);
+
+        
+        JLabel exit = new JLabel("X");
+        exit.setBounds(970, 10, 20, 30);
+        exit.setFont(new Font("Tahoma", Font.BOLD, 20));
+        exit.setForeground(DesignSystem.WHITE);
+        exit.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        exit.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                System.exit(0);
+            }
+        });
+        header.add(exit);
+
+        
         JLabel label = new JLabel("Select Employee ID");
         label.setBounds(50, 100, 200, 30);
         label.setFont(DesignSystem.SUBHEADER_FONT);
@@ -50,7 +69,7 @@ public class RemoveEmployee extends JFrame implements ActionListener {
             e.printStackTrace();
         }
 
-        // Details Area
+        
         int startY = 160;
         int gapY = 40;
 
@@ -66,7 +85,7 @@ public class RemoveEmployee extends JFrame implements ActionListener {
         addLabel("Phone:", 50, startY + gapY * 3);
         ePhone = addValueLabel(250, startY + gapY * 3);
 
-        // Buttons
+        
         removeBtn = new JButton("REMOVE");
         removeBtn.setBounds(600, 300, 150, 40);
         removeBtn.setBackground(new Color(231, 76, 60)); // Red for remove
@@ -85,10 +104,10 @@ public class RemoveEmployee extends JFrame implements ActionListener {
         backBtn.addActionListener(this);
         add(backBtn);
 
-        // Initial Data Load
+        
         updateLabels();
 
-        // Event Listener
+        
         selectEmp.addItemListener(new ItemListener() {
             @Override
             public void itemStateChanged(ItemEvent e) {
@@ -96,7 +115,7 @@ public class RemoveEmployee extends JFrame implements ActionListener {
             }
         });
 
-        // Decorative Image (Optional, using a colored panel for now)
+        
         JPanel decoration = new JPanel();
         decoration.setBounds(600, 100, 300, 180);
         decoration.setBackground(DesignSystem.PRIMARY_COLOR);
@@ -159,7 +178,7 @@ public class RemoveEmployee extends JFrame implements ActionListener {
             }
         } else {
             setVisible(false);
-            new Main_Class(); // Go back to Dashboard instead of ViewEmployee
+            new Main_Class();
         }
     }
 

@@ -24,7 +24,20 @@ public class Main_Class extends JFrame {
         title.setForeground(DesignSystem.WHITE);
         header.add(title);
 
-        // Sidebar
+        
+        JLabel exit = new JLabel("X");
+        exit.setBounds(1090, 10, 20, 30);
+        exit.setFont(new Font("Tahoma", Font.BOLD, 20));
+        exit.setForeground(DesignSystem.WHITE);
+        exit.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        exit.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                System.exit(0);
+            }
+        });
+        header.add(exit);
+
+        
         JPanel sidebar = new JPanel();
         sidebar.setBackground(DesignSystem.TEXT_COLOR);
         sidebar.setBounds(0, 60, 250, 570);
@@ -37,31 +50,26 @@ public class Main_Class extends JFrame {
         welcome.setForeground(DesignSystem.WHITE);
         sidebar.add(welcome);
 
-        // Main Content Area - Dashboard Cards
-        // Add Employee Card
+        
         createDashboardCard("Add Employee", 300, 100, e -> {
             setVisible(false);
             new AddEmployee();
         });
 
-        // View Employee Card
+        
         createDashboardCard("View Employee", 550, 100, e -> {
             setVisible(false);
             new ViewEmployee();
         });
 
-        // Remove Employee Card
+        
         createDashboardCard("Remove Employee", 800, 100, e -> {
             setVisible(false);
             new RemoveEmployee();
         });
 
-        // Update Details Card (Adding this as it was missing in original but good to
-        // have)
+        
         createDashboardCard("Update Details", 300, 250, e -> {
-            // Assuming there's a way to select which employee to update,
-            // usually UpdateDetails takes an ID or is called from ViewEmployee.
-            // For now, let's just link to ViewEmployee as that's the typical flow
             setVisible(false);
             new ViewEmployee();
         });
@@ -77,7 +85,7 @@ public class Main_Class extends JFrame {
         card.setBounds(x, y, 200, 120);
         card.setBackground(DesignSystem.WHITE);
         card.setLayout(null);
-        // Add subtle border/shadow effect (simulated with border)
+        
         card.setBorder(BorderFactory.createLineBorder(new Color(200, 200, 200), 1));
         add(card);
 

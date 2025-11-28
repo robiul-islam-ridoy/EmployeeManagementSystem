@@ -9,39 +9,58 @@ import java.util.Random;
 public class AddEmployee extends JFrame implements ActionListener {
 
     JTextField eName, eFName, eMName, eAddress, eNID, ePhone, eEmail, eSalary, eDesignation;
-    JSpinner eDob; // Changed from JDateChooser to JSpinner
+    JSpinner eDob;
     JComboBox<String> eEducation;
     Random random = new Random();
     int randomNumber = random.nextInt(999999);
     JButton submitBtn, backBtn;
 
     AddEmployee() {
-        // Frame setup
+        
         getContentPane().setBackground(DesignSystem.BACKGROUND_COLOR);
         setLayout(null);
 
-        // Header
-        JLabel heading = new JLabel("Add Employee Details");
-        heading.setBounds(320, 30, 500, 50);
-        heading.setFont(DesignSystem.HEADER_FONT);
-        heading.setForeground(DesignSystem.PRIMARY_COLOR);
-        heading.setHorizontalAlignment(SwingConstants.CENTER);
-        add(heading);
+        
+        JPanel header = new JPanel();
+        header.setBackground(DesignSystem.PRIMARY_COLOR);
+        header.setBounds(0, 0, 900, 60);
+        header.setLayout(null);
+        add(header);
 
-        // Form Container
+        JLabel heading = new JLabel("Add Employee Details");
+        heading.setBounds(320, 5, 500, 50);
+        heading.setFont(DesignSystem.HEADER_FONT);
+        heading.setForeground(DesignSystem.WHITE);
+        heading.setHorizontalAlignment(SwingConstants.CENTER);
+        header.add(heading);
+
+        
+        JLabel exit = new JLabel("X");
+        exit.setBounds(870, 10, 20, 30);
+        exit.setFont(new Font("Tahoma", Font.BOLD, 20));
+        exit.setForeground(DesignSystem.WHITE);
+        exit.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        exit.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                System.exit(0);
+            }
+        });
+        header.add(exit);
+
+        
         int startY = 150;
         int gapY = 50;
         int labelX1 = 50, fieldX1 = 200;
         int labelX2 = 450, fieldX2 = 600;
 
-        // Row 1
+        
         addLabel("Name", labelX1, startY);
         eName = addTextField(fieldX1, startY);
 
         addLabel("Father's Name", labelX2, startY);
         eFName = addTextField(fieldX2, startY);
 
-        // Row 2
+        
         addLabel("Mother's Name", labelX1, startY + gapY);
         eMName = addTextField(fieldX1, startY + gapY);
 
@@ -53,28 +72,28 @@ public class AddEmployee extends JFrame implements ActionListener {
         eDob.setFont(DesignSystem.BODY_FONT);
         add(eDob);
 
-        // Row 3
+        
         addLabel("Address", labelX1, startY + gapY * 2);
         eAddress = addTextField(fieldX1, startY + gapY * 2);
 
         addLabel("Salary", labelX2, startY + gapY * 2);
         eSalary = addTextField(fieldX2, startY + gapY * 2);
 
-        // Row 4
+        
         addLabel("Designation", labelX1, startY + gapY * 3);
         eDesignation = addTextField(fieldX1, startY + gapY * 3);
 
         addLabel("NID", labelX2, startY + gapY * 3);
         eNID = addTextField(fieldX2, startY + gapY * 3);
 
-        // Row 5
+        
         addLabel("Phone", labelX1, startY + gapY * 4);
         ePhone = addTextField(fieldX1, startY + gapY * 4);
 
         addLabel("Email", labelX2, startY + gapY * 4);
         eEmail = addTextField(fieldX2, startY + gapY * 4);
 
-        // Row 6
+        
         addLabel("Education", labelX1, startY + gapY * 5);
         String[] eduItems = { "BSc", "BBA", "MSc", "MBA", "PhD", "Diploma" };
         eEducation = new JComboBox<>(eduItems);
@@ -90,7 +109,7 @@ public class AddEmployee extends JFrame implements ActionListener {
         eID.setForeground(DesignSystem.PRIMARY_COLOR);
         add(eID);
 
-        // Buttons
+        
         submitBtn = new JButton("SUBMIT");
         submitBtn.setBounds(250, 550, 150, 40);
         submitBtn.setBackground(DesignSystem.PRIMARY_COLOR);
@@ -145,7 +164,6 @@ public class AddEmployee extends JFrame implements ActionListener {
             String designation = eDesignation.getText();
             String empId = "" + randomNumber;
 
-            // Format Date
             java.util.Date date = (java.util.Date) eDob.getValue();
             java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd");
             String dob = sdf.format(date);

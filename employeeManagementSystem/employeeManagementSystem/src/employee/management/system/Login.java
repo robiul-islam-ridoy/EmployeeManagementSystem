@@ -14,11 +14,11 @@ public class Login extends JFrame implements ActionListener {
     JButton loginBtn, backBtn;
 
     Login() {
-        // Frame setup
+        
         getContentPane().setBackground(DesignSystem.WHITE);
         setLayout(null);
 
-        // Left Side - Decorative Panel
+        
         JPanel leftPanel = new JPanel();
         leftPanel.setBackground(DesignSystem.PRIMARY_COLOR);
         leftPanel.setBounds(0, 0, 250, 400);
@@ -39,12 +39,25 @@ public class Login extends JFrame implements ActionListener {
         subtitleLabel.setHorizontalAlignment(SwingConstants.CENTER);
         leftPanel.add(subtitleLabel);
 
-        // Right Side - Login Form
+        
         JLabel heading = new JLabel("Login");
         heading.setBounds(350, 30, 200, 40);
         heading.setFont(DesignSystem.HEADER_FONT);
         heading.setForeground(DesignSystem.PRIMARY_COLOR);
         add(heading);
+
+        
+        JLabel exit = new JLabel("X");
+        exit.setBounds(570, 10, 20, 30);
+        exit.setFont(new Font("Tahoma", Font.BOLD, 20));
+        exit.setForeground(DesignSystem.PRIMARY_COLOR);
+        exit.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        exit.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                System.exit(0);
+            }
+        });
+        add(exit);
 
         JLabel userName = new JLabel("Username");
         userName.setBounds(300, 90, 100, 20);
@@ -86,7 +99,7 @@ public class Login extends JFrame implements ActionListener {
 
         setSize(600, 400);
         setLocation(450, 200);
-        setUndecorated(true); // Modern look without window borders
+        setUndecorated(true); 
         setVisible(true);
     }
 

@@ -18,18 +18,34 @@ public class ViewEmployee extends JFrame implements ActionListener {
     JButton searchBtn, printBtn, updateBtn, backBtn;
 
     public ViewEmployee() {
-        // Frame setup
+
         getContentPane().setBackground(DesignSystem.BACKGROUND_COLOR);
         setLayout(null);
 
-        // Header
-        JLabel heading = new JLabel("View Employee Details");
-        heading.setBounds(20, 20, 300, 30);
-        heading.setFont(DesignSystem.HEADER_FONT);
-        heading.setForeground(DesignSystem.PRIMARY_COLOR);
-        add(heading);
+        JPanel header = new JPanel();
+        header.setBackground(DesignSystem.PRIMARY_COLOR);
+        header.setBounds(0, 0, 915, 60);
+        header.setLayout(null);
+        add(header);
 
-        // Search Area
+        JLabel heading = new JLabel("View Employee Details");
+        heading.setBounds(20, 15, 300, 30);
+        heading.setFont(DesignSystem.HEADER_FONT);
+        heading.setForeground(DesignSystem.WHITE);
+        header.add(heading);
+
+        JLabel exit = new JLabel("X");
+        exit.setBounds(885, 10, 20, 30);
+        exit.setFont(new Font("Tahoma", Font.BOLD, 20));
+        exit.setForeground(DesignSystem.WHITE);
+        exit.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        exit.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                System.exit(0);
+            }
+        });
+        header.add(exit);
+
         JLabel searchLabel = new JLabel("Search by Employee ID:");
         searchLabel.setBounds(20, 70, 180, 20);
         searchLabel.setFont(DesignSystem.BODY_FONT);
@@ -50,13 +66,12 @@ public class ViewEmployee extends JFrame implements ActionListener {
             e.printStackTrace();
         }
 
-        // Buttons
         searchBtn = createButton("Search", 20, 110);
         printBtn = createButton("Print", 140, 110);
         updateBtn = createButton("Update", 260, 110);
         backBtn = createButton("Back", 380, 110);
 
-        // Table
+        
         table = new JTable();
         table.setFont(new Font("Segoe UI", Font.PLAIN, 14));
         table.setRowHeight(25);
@@ -70,10 +85,9 @@ public class ViewEmployee extends JFrame implements ActionListener {
         scrollPane.setBounds(0, 160, 900, 540);
         add(scrollPane);
 
-        // Load initial data
         loadData("select * from employee");
 
-        setSize(915, 740); // Adjusted size
+        setSize(915, 740);
         setLocation(300, 100);
         setUndecorated(true);
         setVisible(true);
@@ -101,18 +115,15 @@ public class ViewEmployee extends JFrame implements ActionListener {
         }
     }
 
-    // Custom method to replace DbUtils.resultSetToTableModel
     public static DefaultTableModel buildTableModel(ResultSet rs) throws SQLException {
         ResultSetMetaData metaData = rs.getMetaData();
 
-        // names of columns
         Vector<String> columnNames = new Vector<String>();
         int columnCount = metaData.getColumnCount();
         for (int column = 1; column <= columnCount; column++) {
             columnNames.add(metaData.getColumnName(column));
         }
 
-        // data of the table
         Vector<Vector<Object>> data = new Vector<Vector<Object>>();
         while (rs.next()) {
             Vector<Object> vector = new Vector<Object>();
