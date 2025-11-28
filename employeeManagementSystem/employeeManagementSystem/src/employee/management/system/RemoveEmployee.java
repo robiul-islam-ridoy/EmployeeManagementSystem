@@ -10,136 +10,156 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class RemoveEmployee extends JFrame implements ActionListener {
-    Choice selectEmp;
+    JComboBox<String> selectEmp;
     JButton backBtn, removeBtn;
+    JLabel eName, eFName, eEmail, ePhone;
 
-    RemoveEmployee(){
+    RemoveEmployee() {
+        // Frame setup
+        getContentPane().setBackground(DesignSystem.BACKGROUND_COLOR);
+        setLayout(null);
+
+        // Header
+        JLabel heading = new JLabel("Remove Employee");
+        heading.setBounds(250, 20, 500, 50);
+        heading.setFont(DesignSystem.HEADER_FONT);
+        heading.setForeground(DesignSystem.PRIMARY_COLOR);
+        heading.setHorizontalAlignment(SwingConstants.CENTER);
+        add(heading);
+
+        // Selection Area
         JLabel label = new JLabel("Select Employee ID");
-        label.setBounds(50, 50, 200, 30);
-        label.setFont(new Font("Tahoma", Font.BOLD, 16));
+        label.setBounds(50, 100, 200, 30);
+        label.setFont(DesignSystem.SUBHEADER_FONT);
+        label.setForeground(DesignSystem.TEXT_COLOR);
         add(label);
 
-        selectEmp = new Choice();
-        selectEmp.setBounds(250, 50, 100, 30);
+        selectEmp = new JComboBox<>();
+        selectEmp.setBounds(250, 100, 200, 30);
+        selectEmp.setFont(DesignSystem.BODY_FONT);
+        selectEmp.setBackground(Color.WHITE);
         add(selectEmp);
 
-        try{
+        try {
             conn c = new conn();
             ResultSet resultSet = c.statement.executeQuery("select * from employee");
-            while (resultSet.next()){
-                selectEmp.add(resultSet.getString("eID"));
+            while (resultSet.next()) {
+                selectEmp.addItem(resultSet.getString("eID"));
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        JLabel name = new JLabel("Name:");
-        name.setBounds(50, 150, 150, 30);
-        name.setFont(new Font("SAN_SERIF", Font.BOLD, 20));
-        add(name);
+        // Details Area
+        int startY = 160;
+        int gapY = 40;
 
-        JLabel eName = new JLabel();
-        eName.setBounds(200, 150, 150, 30);
-        eName.setFont(new Font("SAN_SERIF", Font.BOLD, 20));
-        add(eName);
+        addLabel("Name:", 50, startY);
+        eName = addValueLabel(250, startY);
 
-        JLabel fname = new JLabel("Fathers Name:");
-        fname.setBounds(50, 200, 150, 30);
-        fname.setFont(new Font("SAN_SERIF", Font.BOLD, 20));
-        add(fname);
+        addLabel("Father's Name:", 50, startY + gapY);
+        eFName = addValueLabel(250, startY + gapY);
 
-        JLabel eFName = new JLabel();
-        eFName.setBounds(200, 200, 150, 30);
-        eFName.setFont(new Font("SAN_SERIF", Font.BOLD, 20));
-        add(eFName);
+        addLabel("Email:", 50, startY + gapY * 2);
+        eEmail = addValueLabel(250, startY + gapY * 2);
 
-        JLabel email = new JLabel("Email :");
-        email.setBounds(400, 200, 150, 30);
-        email.setFont(new Font("SAN_SERIF", Font.BOLD, 20));
-        add(email);
+        addLabel("Phone:", 50, startY + gapY * 3);
+        ePhone = addValueLabel(250, startY + gapY * 3);
 
-        JLabel eEmail = new JLabel();
-        eEmail.setBounds(550, 200, 250, 30);
-        eEmail.setFont(new Font("SAN_SERIF", Font.BOLD, 20));
-        add(eEmail);
-
-        JLabel phone = new JLabel("Phone:");
-        phone.setBounds(50, 250, 150, 30);
-        phone.setFont(new Font("SAN_SERIF", Font.BOLD, 20));
-        add(phone);
-
-        JLabel ePhone = new JLabel();
-        ePhone.setBounds(200, 250, 150, 30);
-        ePhone.setFont(new Font("SAN_SERIF", Font.BOLD, 20));
-        add(ePhone);
-
-        removeBtn = new JButton("Remove");
-        removeBtn.setBounds(300, 300, 150, 30);
-        removeBtn.setForeground(Color.black);
-        removeBtn.setBackground(Color.LIGHT_GRAY);
+        // Buttons
+        removeBtn = new JButton("REMOVE");
+        removeBtn.setBounds(600, 300, 150, 40);
+        removeBtn.setBackground(new Color(231, 76, 60)); // Red for remove
+        removeBtn.setForeground(Color.WHITE);
+        removeBtn.setFont(DesignSystem.BUTTON_FONT);
+        removeBtn.setFocusPainted(false);
         removeBtn.addActionListener(this);
         add(removeBtn);
 
-        backBtn = new JButton("Back");
-        backBtn.setBounds(50, 300, 150, 30);
-        backBtn.setForeground(Color.black);
-        backBtn.setBackground(Color.LIGHT_GRAY);
+        backBtn = new JButton("BACK");
+        backBtn.setBounds(600, 360, 150, 40);
+        backBtn.setBackground(DesignSystem.BACKGROUND_COLOR);
+        backBtn.setForeground(DesignSystem.TEXT_COLOR);
+        backBtn.setFont(DesignSystem.BUTTON_FONT);
+        backBtn.setFocusPainted(false);
         backBtn.addActionListener(this);
         add(backBtn);
 
+        // Initial Data Load
+        updateLabels();
+
+        // Event Listener
+        selectEmp.addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                updateLabels();
+            }
+        });
+
+        // Decorative Image (Optional, using a colored panel for now)
+        JPanel decoration = new JPanel();
+        decoration.setBounds(600, 100, 300, 180);
+        decoration.setBackground(DesignSystem.PRIMARY_COLOR);
+        JLabel iconLabel = new JLabel("DELETE");
+        iconLabel.setForeground(new Color(255, 255, 255, 50));
+        iconLabel.setFont(new Font("Segoe UI", Font.BOLD, 60));
+        decoration.add(iconLabel);
+        add(decoration);
+
+        setSize(1000, 500);
+        setLocation(250, 100);
+        setUndecorated(true);
+        setVisible(true);
+    }
+
+    private void addLabel(String text, int x, int y) {
+        JLabel label = new JLabel(text);
+        label.setBounds(x, y, 150, 30);
+        label.setFont(DesignSystem.SUBHEADER_FONT);
+        label.setForeground(DesignSystem.TEXT_COLOR);
+        add(label);
+    }
+
+    private JLabel addValueLabel(int x, int y) {
+        JLabel label = new JLabel();
+        label.setBounds(x, y, 300, 30);
+        label.setFont(DesignSystem.BODY_FONT);
+        label.setForeground(DesignSystem.PRIMARY_COLOR);
+        add(label);
+        return label;
+    }
+
+    private void updateLabels() {
         try {
             conn c = new conn();
-            ResultSet resultSet = c.statement.executeQuery("select * from employee where eID = '"+selectEmp.getSelectedItem()+"'");
-            while (resultSet.next()){
+            String query = "select * from employee where eID = '" + selectEmp.getSelectedItem() + "'";
+            ResultSet resultSet = c.statement.executeQuery(query);
+            while (resultSet.next()) {
                 eName.setText(resultSet.getString("ename"));
                 eFName.setText(resultSet.getString("fname"));
                 eEmail.setText(resultSet.getString("Email"));
                 ePhone.setText(resultSet.getString("Phone"));
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (Exception ex) {
+            ex.printStackTrace();
         }
-
-        selectEmp.addItemListener(new ItemListener() {
-            @Override
-            public void itemStateChanged(ItemEvent e) {
-                try{
-                    conn c = new conn();
-                    ResultSet resultSet = c.statement.executeQuery("select * from employee where eID = '"+selectEmp.getSelectedItem()+"'");
-                    while (resultSet.next()){
-                        eName.setText(resultSet.getString("ename"));
-                        eFName.setText(resultSet.getString("fname"));
-                        eEmail.setText(resultSet.getString("Email"));
-                        ePhone.setText(resultSet.getString("Phone"));
-                    }
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                }
-            }
-        });
-
-        setSize(1000, 400);
-        setLocation(250, 100);
-        setLayout(null);
-        setVisible(true);
-
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if(e.getSource() == removeBtn){
-            try{
+        if (e.getSource() == removeBtn) {
+            try {
                 conn c = new conn();
-                c.statement.executeUpdate("delete from employee where eID = '"+selectEmp.getSelectedItem()+"'");
+                c.statement.executeUpdate("delete from employee where eID = '" + selectEmp.getSelectedItem() + "'");
                 JOptionPane.showMessageDialog(null, "Employee Deleted Successfully.");
                 setVisible(false);
                 new ViewEmployee();
             } catch (SQLException ex) {
                 ex.printStackTrace();
             }
-        }else {
+        } else {
             setVisible(false);
-            new ViewEmployee();
+            new Main_Class(); // Go back to Dashboard instead of ViewEmployee
         }
     }
 

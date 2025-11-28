@@ -1,99 +1,135 @@
 package employee.management.system;
 
-import net.proteanit.sql.DbUtils;
-
 import javax.swing.*;
-import javax.xml.transform.Result;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.print.PrinterException;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
-
+import java.util.Vector;
 
 public class ViewEmployee extends JFrame implements ActionListener {
+
     Choice searchOptions;
     JTable table;
     JButton searchBtn, printBtn, updateBtn, backBtn;
-    public ViewEmployee(){
-        getContentPane().setBackground(new Color(255, 121, 121));
 
-        JLabel searchText = new JLabel("Search By Employee ID: ");
-        searchText.setBounds(20, 20, 150, 40);
-        add(searchText);
+    public ViewEmployee() {
+        // Frame setup
+        getContentPane().setBackground(DesignSystem.BACKGROUND_COLOR);
+        setLayout(null);
+
+        // Header
+        JLabel heading = new JLabel("View Employee Details");
+        heading.setBounds(20, 20, 300, 30);
+        heading.setFont(DesignSystem.HEADER_FONT);
+        heading.setForeground(DesignSystem.PRIMARY_COLOR);
+        add(heading);
+
+        // Search Area
+        JLabel searchLabel = new JLabel("Search by Employee ID:");
+        searchLabel.setBounds(20, 70, 180, 20);
+        searchLabel.setFont(DesignSystem.BODY_FONT);
+        add(searchLabel);
 
         searchOptions = new Choice();
-        searchOptions.setBounds(180, 20, 150, 40);
+        searchOptions.setBounds(220, 70, 150, 20);
+        searchOptions.setFont(new Font("Segoe UI", Font.PLAIN, 14));
         add(searchOptions);
 
         try {
             conn c = new conn();
             ResultSet resultSet = c.statement.executeQuery("select * from employee");
-            while (resultSet.next()){
+            while (resultSet.next()) {
                 searchOptions.add(resultSet.getString("eID"));
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        // Buttons
+        searchBtn = createButton("Search", 20, 110);
+        printBtn = createButton("Print", 140, 110);
+        updateBtn = createButton("Update", 260, 110);
+        backBtn = createButton("Back", 380, 110);
+
+        // Table
         table = new JTable();
-        try{
+        table.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        table.setRowHeight(25);
+        table.getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, 14));
+        table.getTableHeader().setBackground(DesignSystem.PRIMARY_COLOR);
+        table.getTableHeader().setForeground(Color.WHITE);
+        table.setSelectionBackground(DesignSystem.SECONDARY_COLOR);
+        table.setSelectionForeground(Color.WHITE);
+
+        JScrollPane scrollPane = new JScrollPane(table);
+        scrollPane.setBounds(0, 160, 900, 540);
+        add(scrollPane);
+
+        // Load initial data
+        loadData("select * from employee");
+
+        setSize(915, 740); // Adjusted size
+        setLocation(300, 100);
+        setUndecorated(true);
+        setVisible(true);
+    }
+
+    private JButton createButton(String text, int x, int y) {
+        JButton btn = new JButton(text);
+        btn.setBounds(x, y, 100, 30);
+        btn.setBackground(DesignSystem.PRIMARY_COLOR);
+        btn.setForeground(Color.WHITE);
+        btn.setFont(DesignSystem.BUTTON_FONT);
+        btn.setFocusPainted(false);
+        btn.addActionListener(this);
+        add(btn);
+        return btn;
+    }
+
+    private void loadData(String query) {
+        try {
             conn c = new conn();
-            ResultSet resultSet = c.statement.executeQuery("select * from employee");
-            table.setModel(DbUtils.resultSetToTableModel(resultSet));
+            ResultSet resultSet = c.statement.executeQuery(query);
+            table.setModel(buildTableModel(resultSet));
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
 
-        JScrollPane scrollPane = new JScrollPane(table);
-        scrollPane.setBounds(0, 100, 900, 600);
-        add(scrollPane);
+    // Custom method to replace DbUtils.resultSetToTableModel
+    public static DefaultTableModel buildTableModel(ResultSet rs) throws SQLException {
+        ResultSetMetaData metaData = rs.getMetaData();
 
-        searchBtn = new JButton("Search");
-        searchBtn.setBounds(20, 70, 80,20);
-        searchBtn.setForeground(Color.black);
-        searchBtn.setBackground(Color.LIGHT_GRAY);
-        searchBtn.addActionListener(this);
-        add(searchBtn);
+        // names of columns
+        Vector<String> columnNames = new Vector<String>();
+        int columnCount = metaData.getColumnCount();
+        for (int column = 1; column <= columnCount; column++) {
+            columnNames.add(metaData.getColumnName(column));
+        }
 
-        printBtn = new JButton("Print");
-        printBtn.setBounds(120, 70, 80,20);
-        printBtn.setForeground(Color.black);
-        printBtn.setBackground(Color.LIGHT_GRAY);
-        printBtn.addActionListener(this);
-        add(printBtn);
+        // data of the table
+        Vector<Vector<Object>> data = new Vector<Vector<Object>>();
+        while (rs.next()) {
+            Vector<Object> vector = new Vector<Object>();
+            for (int columnIndex = 1; columnIndex <= columnCount; columnIndex++) {
+                vector.add(rs.getObject(columnIndex));
+            }
+            data.add(vector);
+        }
 
-        updateBtn = new JButton("Update");
-        updateBtn.setBounds(220, 70, 80,20);
-        updateBtn.setForeground(Color.black);
-        updateBtn.setBackground(Color.LIGHT_GRAY);
-        updateBtn.addActionListener(this);
-        add(updateBtn);
-
-        backBtn = new JButton("Back");
-        backBtn.setBounds(320, 70, 80,20);
-        backBtn.setForeground(Color.black);
-        backBtn.setBackground(Color.LIGHT_GRAY);
-        backBtn.addActionListener(this);
-        add(backBtn);
-
-        setSize(900, 700);
-        setLocation(300, 100);
-        setLayout(null);
-        setVisible(true);
+        return new DefaultTableModel(data, columnNames);
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == searchBtn){
-            String querry = "select * from employee where eID = '"+searchOptions.getSelectedItem()+"'";
-            try {
-                conn c = new conn();
-                ResultSet resultSet = c.statement.executeQuery(querry);
-                table.setModel(DbUtils.resultSetToTableModel(resultSet));
-            } catch (SQLException ex) {
-                ex.printStackTrace();
-            }
+        if (e.getSource() == searchBtn) {
+            String query = "select * from employee where eID = '" + searchOptions.getSelectedItem() + "'";
+            loadData(query);
         } else if (e.getSource() == printBtn) {
             try {
                 table.print();
@@ -103,8 +139,7 @@ public class ViewEmployee extends JFrame implements ActionListener {
         } else if (e.getSource() == updateBtn) {
             setVisible(false);
             new UpdateDetails(searchOptions.getSelectedItem());
-
-        }else {
+        } else {
             setVisible(false);
             new Main_Class();
         }

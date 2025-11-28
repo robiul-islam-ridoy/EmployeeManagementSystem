@@ -1,35 +1,56 @@
 package employee.management.system;
 
-import java.awt.Image;
+import javax.swing.*;
+import java.awt.*;
 
-import javax.swing.ImageIcon;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
+public class splash extends JFrame {
 
-public class splash extends JFrame{
-    splash(){
-        ImageIcon i1 = new ImageIcon(ClassLoader.getSystemResource("icons/front.gif"));
-        Image i2 = i1.getImage().getScaledInstance(1170, 650, Image.SCALE_DEFAULT);
-        ImageIcon i3 = new ImageIcon(i2);
-        JLabel image = new JLabel(i3);
-        image.setBounds(0,0,1170,650);
-        add(image);
+    splash() {
+        // Frame setup
+        getContentPane().setBackground(DesignSystem.PRIMARY_COLOR);
+        setLayout(null);
 
-        
+        // Title
+        JLabel heading = new JLabel("EMPLOYEE MANAGEMENT SYSTEM");
+        heading.setBounds(80, 30, 1000, 60);
+        heading.setFont(new Font("Raleway", Font.BOLD, 60));
+        heading.setForeground(DesignSystem.SECONDARY_COLOR);
+        heading.setHorizontalAlignment(SwingConstants.CENTER);
+        add(heading);
+
+        // Subtitle/Loading text
+        JLabel loading = new JLabel("Loading...");
+        loading.setBounds(500, 400, 200, 30);
+        loading.setFont(DesignSystem.SUBHEADER_FONT);
+        loading.setForeground(DesignSystem.WHITE);
+        loading.setHorizontalAlignment(SwingConstants.CENTER);
+        add(loading);
+
+        // Progress Bar
+        JProgressBar progressBar = new JProgressBar();
+        progressBar.setBounds(285, 450, 600, 10);
+        progressBar.setBackground(DesignSystem.PRIMARY_COLOR);
+        progressBar.setForeground(DesignSystem.SECONDARY_COLOR);
+        progressBar.setBorderPainted(false);
+        add(progressBar);
+
         setSize(1170, 650);
         setLocation(200, 100);
-        setLayout(null);
+        setUndecorated(true); // Remove window borders for a cleaner look
         setVisible(true);
 
-        try{
-            Thread.sleep(5000);
+        try {
+            for (int i = 0; i <= 100; i++) {
+                Thread.sleep(40); // Simulate loading
+                progressBar.setValue(i);
+            }
             setVisible(false);
             new Login();
-
-        }catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
     public static void main(String[] args) {
         new splash();
     }
