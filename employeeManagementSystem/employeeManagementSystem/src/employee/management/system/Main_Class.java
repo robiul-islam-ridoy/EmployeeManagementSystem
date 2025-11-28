@@ -7,11 +7,11 @@ import java.awt.event.ActionListener;
 public class Main_Class extends JFrame {
 
     Main_Class() {
-        // Frame setup
+        
         getContentPane().setBackground(DesignSystem.BACKGROUND_COLOR);
         setLayout(null);
 
-        // Header
+        
         JPanel header = new JPanel();
         header.setBackground(DesignSystem.PRIMARY_COLOR);
         header.setBounds(0, 0, 1120, 60);
