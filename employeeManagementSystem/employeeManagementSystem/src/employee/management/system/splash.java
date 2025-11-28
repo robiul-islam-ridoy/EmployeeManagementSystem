@@ -11,13 +11,12 @@ public class splash extends JFrame {
         setLayout(null);
 
         JLabel heading = new JLabel("EMPLOYEE MANAGEMENT SYSTEM");
-        heading.setBounds(80, 30, 1000, 60);
-        heading.setFont(new Font("Raleway", Font.BOLD, 60));
+        heading.setBounds(80, 250, 1000, 60);
+        heading.setFont(new Font("Raleway", Font.BOLD, 40));
         heading.setForeground(DesignSystem.SECONDARY_COLOR);
         heading.setHorizontalAlignment(SwingConstants.CENTER);
         add(heading);
 
-    
         JLabel loading = new JLabel("Loading...");
         loading.setBounds(500, 400, 200, 30);
         loading.setFont(DesignSystem.SUBHEADER_FONT);
@@ -32,14 +31,21 @@ public class splash extends JFrame {
         progressBar.setBorderPainted(false);
         add(progressBar);
 
+        JLabel developer = new JLabel("Developed By: Robiul Islam Ridoy");
+        developer.setBounds(850, 600, 300, 20);
+        developer.setFont(new Font("Raleway", Font.PLAIN, 12));
+        developer.setForeground(DesignSystem.WHITE);
+        developer.setHorizontalAlignment(SwingConstants.RIGHT);
+        add(developer);
+
         setSize(1170, 650);
         setLocation(200, 100);
-        setUndecorated(true); 
+        setUndecorated(true);
         setVisible(true);
 
         try {
             for (int i = 0; i <= 100; i++) {
-                Thread.sleep(40); 
+                Thread.sleep(40);
                 progressBar.setValue(i);
             }
             setVisible(false);
